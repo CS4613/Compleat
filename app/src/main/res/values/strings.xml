@@ -1,6 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Compleat</string>
+
     <string name="title_tools">Tools</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_tasks">Tasks</string>
+
 </resources>

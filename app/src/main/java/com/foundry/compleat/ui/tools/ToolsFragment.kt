@@ -9,19 +9,26 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.foundry.compleat.MainActivity
 import com.foundry.compleat.R
 
 class ToolsFragment : Fragment() {
-    private val items:ArrayList<Item> = arrayListOf(
-        Item("Order Picker",
+    private val menuItems:ArrayList<MenuItem> = arrayListOf(
+        MenuItem(
+            "Order Picker",
             "Pull Current and Pending Orders",
-            R.drawable.ic_launcher_foreground),
-        Item("Inventory Builder",
+            R.drawable.ic_launcher_foreground,
+            MainActivity::class.java),
+        MenuItem(
+            "Inventory Builder",
             "Build and Push inventory items to ERP",
-            R.drawable.ic_dashboard_black_24dp),
-        Item("Label Printer",
+            R.drawable.ic_dashboard_black_24dp,
+            MainActivity::class.java),
+        MenuItem(
+            "Label Printer",
             "Print Pricing and Inventory Labels to Print Server",
-            R.drawable.ic_launcher_background)
+            R.drawable.ic_launcher_background,
+            MainActivity::class.java)
     )
 
     private lateinit var toolsViewModel: ToolsViewModel
@@ -32,7 +39,7 @@ class ToolsFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         layoutManager = LinearLayoutManager(context)
-        adapter = RecyclerAdapter(items)
+        adapter = RecyclerAdapter(menuItems)
     }
 
     override fun onCreateView(
