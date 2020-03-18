@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.foundry.compleat.InventoryBuilder
 import com.foundry.compleat.MainActivity
 import com.foundry.compleat.R
 
@@ -23,7 +24,7 @@ class ToolsFragment : Fragment() {
             "Inventory Builder",
             "Build and Push inventory items to ERP",
             R.drawable.ic_dashboard_black_24dp,
-            MainActivity::class.java),
+            InventoryBuilder::class.java),
         MenuItem(
             "Label Printer",
             "Print Pricing and Inventory Labels to Print Server",

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "931596784414",
+    "firebase_url": "https://compleat-f193a.firebaseio.com",
+    "project_id": "compleat-f193a",
+    "storage_bucket": "compleat-f193a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931596784414:android:ea102f05b2567e5b842f0f",
+        "android_client_info": {
+          "package_name": "com.foundry.compleat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "931596784414-9j58j2mlepfd2p217gksrijig1eccdvc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHgUKxVAxpjh3H1ssCnd4O5kx3gonznLI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "931596784414-9j58j2mlepfd2p217gksrijig1eccdvc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
