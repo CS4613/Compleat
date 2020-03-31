@@ -10,9 +10,23 @@ Compleat is a Android Application used to provide the front end for a host of fu
 	* Ordering and Purchase Order Creation
 	* Automated Cycle Count Procedures
 * Order Fulfillment
+* And many many more!
 
 ## Roadmap
-TBA
+Milestone 1:
+1. Inventory Builder
+2. Label Printer
+
+Milestone 2:
+1. Integration with Square for Dashboard
+
+Milestone 3:
+1. Order Picker
+2. Tasks Activity
+
+Milestone 4:
+1. Integration with Tasks and ERP
+2. Integration of Inventory Builder and ERP
 
 ## Team Members
 * Steve Gilland
