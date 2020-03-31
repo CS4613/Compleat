@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.foundry.compleat"
     tools:ignore="GoogleAppIndexingWarning">
-
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
