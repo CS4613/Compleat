@@ -16,7 +16,7 @@ data class MenuItem(
 )
 
 class RecyclerAdapter(private val MenuItems: ArrayList<MenuItem>) :
-    RecyclerView.Adapter<RecyclerAdapter.ItemHolder> () {
+    RecyclerView.Adapter<RecyclerAdapter.ItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflatedView = parent.inflate(R.layout.tool_layout_listitem, false)

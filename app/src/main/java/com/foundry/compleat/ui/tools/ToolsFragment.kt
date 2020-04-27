@@ -14,22 +14,25 @@ import com.foundry.compleat.MainActivity
 import com.foundry.compleat.R
 
 class ToolsFragment : Fragment() {
-    private val menuItems:ArrayList<MenuItem> = arrayListOf(
+    private val menuItems: ArrayList<MenuItem> = arrayListOf(
         MenuItem(
             "Order Picker",
             "Pull Current and Pending Orders",
             R.drawable.ic_launcher_foreground,
-            MainActivity::class.java),
+            MainActivity::class.java
+        ),
         MenuItem(
             "Inventory Builder",
             "Build and Push inventory items to ERP",
             R.drawable.ic_dashboard_black_24dp,
-            InventoryBuilder::class.java),
+            InventoryBuilder::class.java
+        ),
         MenuItem(
             "Label Printer",
             "Print Pricing and Inventory Labels to Print Server",
             R.drawable.ic_launcher_background,
-            MainActivity::class.java)
+            MainActivity::class.java
+        )
     )
 
     private lateinit var toolsViewModel: ToolsViewModel
