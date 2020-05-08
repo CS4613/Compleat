@@ -23,6 +23,7 @@ import com.squareup.square.SquareClient
 import com.squareup.square.models.CatalogQuery
 import com.squareup.square.models.CatalogQueryExact
 import com.squareup.square.models.SearchCatalogObjectsRequest
+import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -46,7 +47,7 @@ class InventoryBuilder : AppCompatActivity(), LifecycleOwner {
 
     var client: SquareClient = SquareClient.Builder()
         .environment(Environment.PRODUCTION)
-        .accessToken("ADD ACCESS TOKEN HERE")
+        .accessToken("ADD APP KEY HERE")
         .build()
     var api = client.catalogApi
 
@@ -107,46 +108,35 @@ class InventoryBuilder : AppCompatActivity(), LifecycleOwner {
     fun searchBarcode(it: FirebaseVisionBarcode) {
         val itemVarType = MutableList<String>(1) {"ITEM_VARIATION"}
 
-        var exactQuery = CatalogQueryExact.Builder(
+        val exactQuery = CatalogQueryExact.Builder(
             "sku",
             it.rawValue.toString()
         ).build()
 
-        var query = CatalogQuery.Builder()
+        val query = CatalogQuery.Builder()
             .exactQuery(exactQuery)
             .build()
 
-        var body = SearchCatalogObjectsRequest.Builder()
+        val body = SearchCatalogObjectsRequest.Builder()
             .objectTypes(itemVarType)
             .query(query)
             .build()
 
         val itemVariationResponse = api.searchCatalogObjects(body)
-
-        val itemType = MutableList<String>(1){"ITEM"}
         if( itemVariationResponse.objects != null ) {
-            exactQuery = CatalogQueryExact.Builder(
-                "version",
-                itemVariationResponse.objects[0].version.toString()
-            ).build()
-            query = CatalogQuery.Builder()
-                .exactQuery(exactQuery)
-                .build()
-            body = SearchCatalogObjectsRequest.Builder()
-                .objectTypes(itemType)
-                .query(query)
-                .build()
+            val itemObject = api.retrieveCatalogObject(itemVariationResponse.objects[0].itemVariationData.itemId, false)
 
-            val itemObject = api.searchCatalogObjects(body).objects[0].itemData
-
-            val rawBarcode = this.viewFinder.findViewById<TextView>(R.id.rawBarcode)
-            val itemInfo = this.viewFinder.findViewById<TextView>(R.id.item_info)
-            rawBarcode.setText(it.rawValue)
-            itemInfo.setText(
-                "Item Name: " + itemObject.name + "\n" +
-                        "Description: " + itemVariationResponse.objects[0].itemData.description + "\n" +
-                        "Price: " + itemVariationResponse.objects[0].itemVariationData.priceMoney.amount + "\n"
-            )
+            val rawBarcode = window.decorView.findViewById<TextView>(R.id.rawBarcode)
+            val itemInfo = window.decorView.findViewById<TextView>(R.id.item_info)
+            rawBarcode.text = it.rawValue
+            val itemInfoString = StringBuilder()
+            val dec = DecimalFormat("$#,###.00")
+            val price = itemVariationResponse.objects[0].itemVariationData.priceMoney.amount.toFloat() / 100
+            itemInfoString
+                .append("Item Name: ").append(itemObject.`object`.itemData.name).append("\n")
+                .append("Description: ").append(itemObject.`object`.itemData.description).append("\n")
+                .append("Price: ").append(dec.format(price).toString()).append("\n")
+            itemInfo.text = itemInfoString.toString()
         } else {
             val rawBarcode = window.decorView.findViewById<TextView>(R.id.rawBarcode)
             val itemInfo = window.decorView.findViewById<TextView>(R.id.item_info)

@@ -32,7 +32,7 @@ class DashboardFragment : Fragment() {
     private lateinit var dashboardViewModel: DashboardViewModel
     var client: SquareClient = SquareClient.Builder()
         .environment(Environment.PRODUCTION)
-        .accessToken("ADD ACCESS TOKEN HERE")
+        .accessToken("ADD APP KEY HERE")
         .build()
 
     override fun onCreateView(
