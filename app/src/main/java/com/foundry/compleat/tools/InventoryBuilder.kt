@@ -1,23 +1,29 @@
-package com.foundry.compleat
+package com.foundry.compleat.tools
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.StrictMode
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraX
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageAnalysisConfig
-import androidx.camera.core.Preview
-import androidx.camera.core.PreviewConfig
+import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.foundry.compleat.R
 import com.foundry.compleat.utils.BarcodeAnalyzer
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
+import com.squareup.square.Environment
+import com.squareup.square.SquareClient
+import com.squareup.square.models.CatalogQuery
+import com.squareup.square.models.CatalogQueryExact
+import com.squareup.square.models.SearchCatalogObjectsRequest
+import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -38,9 +44,17 @@ class InventoryBuilder : AppCompatActivity(), LifecycleOwner {
     private lateinit var viewFinder: TextureView
     private lateinit var analysisExecutor: Executor
 
+    var client: SquareClient = SquareClient.Builder()
+        .environment(Environment.PRODUCTION)
+        .accessToken("ADD ACCESS TOKEN HERE")
+        .build()
+    var api = client.catalogApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inventory_builder)
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         viewFinder = findViewById(R.id.view_finder)
 
@@ -79,6 +93,8 @@ class InventoryBuilder : AppCompatActivity(), LifecycleOwner {
 
         val barcodeAnalyzer = BarcodeAnalyzer { barCodes ->
             barCodes.forEach {
+                CameraX.unbindAll()
+                searchBarcode(it)
                 Log.d("InventoryBuilder", "Barcode detected: ${it.rawValue}.")
             }
         }
@@ -86,6 +102,59 @@ class InventoryBuilder : AppCompatActivity(), LifecycleOwner {
         imageAnalysis.setAnalyzer(analysisExecutor, barcodeAnalyzer)
 
         CameraX.bindToLifecycle(this as LifecycleOwner, preview, imageAnalysis)
+    }
+
+    fun searchBarcode(it: FirebaseVisionBarcode) {
+        val itemVarType = MutableList<String>(1) {"ITEM_VARIATION"}
+
+        var exactQuery = CatalogQueryExact.Builder(
+            "sku",
+            it.rawValue.toString()
+        ).build()
+
+        var query = CatalogQuery.Builder()
+            .exactQuery(exactQuery)
+            .build()
+
+        var body = SearchCatalogObjectsRequest.Builder()
+            .objectTypes(itemVarType)
+            .query(query)
+            .build()
+
+        val itemVariationResponse = api.searchCatalogObjects(body)
+
+        val itemType = MutableList<String>(1){"ITEM"}
+        if( itemVariationResponse.objects != null ) {
+            exactQuery = CatalogQueryExact.Builder(
+                "version",
+                itemVariationResponse.objects[0].version.toString()
+            ).build()
+            query = CatalogQuery.Builder()
+                .exactQuery(exactQuery)
+                .build()
+            body = SearchCatalogObjectsRequest.Builder()
+                .objectTypes(itemType)
+                .query(query)
+                .build()
+
+            val itemObject = api.searchCatalogObjects(body).objects[0].itemData
+
+            val rawBarcode = this.viewFinder.findViewById<TextView>(R.id.rawBarcode)
+            val itemInfo = this.viewFinder.findViewById<TextView>(R.id.item_info)
+            rawBarcode.setText(it.rawValue)
+            itemInfo.setText(
+                "Item Name: " + itemObject.name + "\n" +
+                        "Description: " + itemVariationResponse.objects[0].itemData.description + "\n" +
+                        "Price: " + itemVariationResponse.objects[0].itemVariationData.priceMoney.amount + "\n"
+            )
+        } else {
+            val rawBarcode = window.decorView.findViewById<TextView>(R.id.rawBarcode)
+            val itemInfo = window.decorView.findViewById<TextView>(R.id.item_info)
+            rawBarcode.setText(it.rawValue)
+            itemInfo.setText("Item Not Found.")
+        }
+
+
     }
 
     /**

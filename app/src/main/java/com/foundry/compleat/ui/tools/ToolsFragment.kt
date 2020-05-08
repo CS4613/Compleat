@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.foundry.compleat.InventoryBuilder
+import com.foundry.compleat.tools.InventoryBuilder
 import com.foundry.compleat.MainActivity
 import com.foundry.compleat.R
 
